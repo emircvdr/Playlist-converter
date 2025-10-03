@@ -10,6 +10,7 @@ import { trpc } from "@/lib/trpc";
 import SpotifyTable from "@/components/SpotifyTable";
 import AppleTable from "@/components/AppleTable";
 import { MoveRight } from "lucide-react";
+import { Button } from "@heroui/react";
 
 interface MusicKitInstance {
   authorize: () => Promise<string>;
@@ -164,7 +165,6 @@ export default function Home() {
         <h1 className="text-6xl font-bold text-center">Playlist Converter</h1>
         <p className="text-sm text-center">Convert your playlists from one platform to another</p>
       </div>
-
       <div className="flex flex-wrap gap-4">
         {brands.map((brand) => (
           <LiquidGlassCard key={brand.id} onClick={() => handleBrandClick(brand.name)}>

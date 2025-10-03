@@ -71,4 +71,62 @@ export const appleMusicRouter = router({
       }
       return await res.json();
     }),
+  // server/api/routers/appleMusic.ts  (mevcut router'ına ekle/yerine koy)
+  createApplePlaylist: publicProcedure
+    .input(
+      z.object({
+        userToken: z.string().min(10),
+        name: z.string().min(1),
+        description: z.string().optional(),
+        isPublic: z.boolean().optional(), // opsiyonel
+        seedSongIds: z.array(z.string()).optional(), // opsiyonel: katalog song id'leri
+      })
+    )
+    .mutation(async ({ input }) => {
+      const devToken = generateAppleDeveloperToken();
+
+      const body: {
+        attributes: {
+          name: string;
+          description?: string;
+          isPublic?: boolean;
+        };
+        relationships?: { tracks: { data: { id: string; type: string }[] } };
+      } = {
+        attributes: {
+          name: input.name,
+          ...(input.description ? { description: input.description } : {}),
+          ...(typeof input.isPublic === "boolean"
+            ? { isPublic: input.isPublic }
+            : {}),
+        },
+      };
+
+      if (input.seedSongIds?.length) {
+        body.relationships = {
+          tracks: {
+            data: input.seedSongIds.map((id) => ({ id, type: "songs" })), // katalog "songs"
+          },
+        };
+      }
+
+      const res = await fetch(
+        "https://api.music.apple.com/v1/me/library/playlists",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${devToken}`,
+            "Music-User-Token": input.userToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(`Apple create playlist ${res.status} ${txt}`);
+      }
+      return await res.json();
+    }),
 });
