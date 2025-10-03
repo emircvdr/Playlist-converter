@@ -48,6 +48,26 @@ const spotifyRouter = router({
 
       return { user: data, userPlaylist: userPlaylistData };
     }),
+  getPlaylist: publicProcedure
+    .input(z.object({ id: z.string(), accessToken: z.string() }))
+    .query(async ({ input }) => {
+      const response = await fetch(
+        `https://api.spotify.com/v1/playlists/${input.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${input.accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const data = await response.json();
+
+      return { playlist: data };
+    }),
 });
 
 export default spotifyRouter;

@@ -10,6 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@heroui/table";
+import { useRouter } from "next/navigation";
 
 const columns = [
     { name: "Spotify Playlist", uid: "name" },
@@ -18,6 +19,7 @@ const columns = [
 export type SpotifyTableItem = {
     name: string;
     images: { url: string }[];
+    id: string;
 };
 
 export default function SpotifyTable({
@@ -29,7 +31,7 @@ export default function SpotifyTable({
 }) {
     const [page, setPage] = React.useState(1);
     const rowsPerPage = 5;
-
+    const router = useRouter();
     const pages = Math.ceil((data?.length || 0) / rowsPerPage);
 
     const items = React.useMemo(() => {
@@ -44,7 +46,7 @@ export default function SpotifyTable({
             switch (columnKey) {
                 case "name":
                     return (
-                        <div className="flex items-center gap-3 py-1">
+                        <div className="flex items-center gap-3 py-1" onClick={() => router.push(`/playlist/${item.id}`)}>
                             <div className="relative">
                                 <img
                                     src={item.images[0]?.url}

@@ -16,8 +16,7 @@ const columns = [
 ];
 
 export type AppleTableItem = {
-    name: string;
-    images: { url: string }[];
+    attributes: { name: string, artwork: { url: string } };
 };
 
 export default function AppleTable({
@@ -47,14 +46,14 @@ export default function AppleTable({
                         <div className="flex items-center gap-3 py-1">
                             <div className="relative">
                                 <img
-                                    src={item.images[0]?.url}
-                                    alt={item.name}
+                                    src={item.attributes.artwork.url}
+                                    alt={item.attributes.name}
                                     className="w-10 h-10 rounded-lg object-cover shadow-lg ring-2 ring-white/10 hover:ring-white/30 transition-all duration-300 hover:scale-105"
                                 />
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-sm font-semibold text-foreground">
-                                    {item.name}
+                                    {item.attributes.name}
                                 </span>
                             </div>
                         </div>
@@ -149,7 +148,7 @@ export default function AppleTable({
                 >
                     {(item) => (
                         <TableRow
-                            key={item.name}
+                            key={item.attributes.name}
                             className="group"
                         >
                             {(columnKey) => (
