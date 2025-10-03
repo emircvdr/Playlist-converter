@@ -71,15 +71,14 @@ export const appleMusicRouter = router({
       }
       return await res.json();
     }),
-  // server/api/routers/appleMusic.ts  (mevcut router'ına ekle/yerine koy)
   createApplePlaylist: publicProcedure
     .input(
       z.object({
         userToken: z.string().min(10),
         name: z.string().min(1),
         description: z.string().optional(),
-        isPublic: z.boolean().optional(), // opsiyonel
-        seedSongIds: z.array(z.string()).optional(), // opsiyonel: katalog song id'leri
+        isPublic: z.boolean().optional(),
+        seedSongIds: z.array(z.string()).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -105,7 +104,7 @@ export const appleMusicRouter = router({
       if (input.seedSongIds?.length) {
         body.relationships = {
           tracks: {
-            data: input.seedSongIds.map((id) => ({ id, type: "songs" })), // katalog "songs"
+            data: input.seedSongIds.map((id) => ({ id, type: "songs" })),
           },
         };
       }
